@@ -38,6 +38,7 @@ def fill_missing_values(df: DataFrame) -> DataFrame:
         "improvement_surcharge": 0,
         "congestion_surcharge": 0,
         "total_amount": 0,
+        "passenger_count": 0,
     })
 
 def add_trip_time(df: DataFrame) -> DataFrame:
@@ -47,23 +48,26 @@ def add_trip_time(df: DataFrame) -> DataFrame:
     )
 
 def apply_consistency_filters(df: DataFrame, valid_ids: List[int]) -> DataFrame:
-    return df.filter(col("tpep_pickup_datetime") >= to_date(lit("2023-01-01")))\
-        .filter(col("tpep_dropoff_datetime") >= to_date(lit("2023-01-01")))\
-        .filter(col("tpep_dropoff_datetime") > col("tpep_pickup_datetime"))\
-        .filter((col("passenger_count") > 0) & (col("passenger_count") < 7))\
-        .filter(col("trip_distance") > 0)\
-        .filter(col("RatecodeID").isin([1, 2, 3, 4, 5, 6, 99]))\
-        .filter(col("payment_type").isin([0, 1, 2, 3, 4, 5, 6]))\
-        .filter(col("VendorID").isin([1, 2, 6, 7]))\
-        .filter((col("PUlocationID").isin(valid_ids)) & (col("DOlocationID").isin(valid_ids)))\
-        .filter(
-            (col("trip_distance") > 0) & (col("trip_distance") <= 150) &
-            (col("trip_time_minutes") > 3) & (col("trip_time_minutes") <= 180) &
-            (col("total_amount") > 0) & (col("total_amount") <= 500) &
-            (col("fare_amount") >= 0) &
-            (col("tip_amount") >= 0) &
-            (col("tolls_amount") >= 0)
+    return (
+        df.filter(col("tpep_pickup_datetime") >= to_date(lit("2023-01-01")))
+            .filter(col("tpep_dropoff_datetime") >= to_date(lit("2023-01-01")))
+            .filter(col("tpep_dropoff_datetime") > col("tpep_pickup_datetime"))
+            # .filter((col("passenger_count") > 0) & (col("passenger_count") < 7))
+            .filter(col("trip_distance") > 0)
+            .filter(col("RatecodeID").isin([1, 2, 3, 4, 5, 6, 99]))
+            .filter(col("payment_type").isin([0, 1, 2, 3, 4, 5, 6]))
+            # .filter(col("VendorID").isin([1, 2, 6, 7]))
+            # .filter((col("PUlocationID").isin(valid_ids)) & (col("DOlocationID").isin(valid_ids))) # Line commented due to excessive null values
+            .filter(
+                (col("trip_distance") > 0) & (col("trip_distance") <= 150) &
+                (col("trip_time_minutes") > 3) & (col("trip_time_minutes") <= 180) &
+                (col("total_amount") > 0) & (col("total_amount") <= 500) &
+                (col("fare_amount") >= 0) &
+                (col("tip_amount") >= 0) &
+                (col("tolls_amount") >= 0)
+            )
         )
+        
 
 def validate_financials(df: DataFrame, tolerance_pct: Optional[float] = 0.03) -> DataFrame:
     df = df.withColumn(

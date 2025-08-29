@@ -36,7 +36,7 @@ columns = [
       "congestion_surcharge", 
       "airport_fee", 
 ]
-raw_data = raw_data.filter(col("tpep_pickup_datetime") < to_date(lit("2023-02-01")))
+raw_data = raw_data.filter(col("tpep_pickup_datetime") > to_date(lit("2024-01-01")))
 raw_data = raw_data.select(*columns)
 raw_data.limit(20).display()
 
@@ -207,3 +207,65 @@ duplicates = (
       .filter(col("dup_count") > 1)
 )
 duplicates.display()
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC # Planejamento – Camada Silver
+# MAGIC
+# MAGIC A Camada Silver realizará a padronização, enriquecimento e validação dos dados provenientes da Camada Raw.  
+# MAGIC O objetivo é produzir conjuntos de dados consistentes, limpos e contextualizados, servindo como base confiáve
+# MAGIC
+
+# COMMAND ----------
+
+# import silver_functions
+import os, sys
+parent_dir = os.path.abspath(os.path.join(os.getcwd(), '..'))
+if os.path.join(parent_dir, 'utilities') not in sys.path:
+    sys.path.append(os.path.join(parent_dir, 'utilities'))
+if 'silver_functions' in sys.modules:
+    del sys.modules['silver_functions']
+from silver_functions import *
+
+# COMMAND ----------
+
+# Read raw data
+dataset = spark.sql("SELECT * FROM tlc.tripdata.tripdata_raw")
+  
+# # Apply transformations
+dataset = fill_missing_values(dataset)
+dataset = cast_columns(dataset)
+dataset = add_trip_time(dataset)
+dataset = apply_consistency_filters(dataset, valid_ids)
+dataset = validate_financials(dataset, tolerance_pct=0.03)
+dataset = drop_duplicate_trips(dataset)
+dataset = dataset.withColumn(
+"avg_speed", 
+spark_round(
+    when(
+    col("trip_time_minutes") != 0, 
+    col("trip_distance") / (col("trip_time_minutes")/60)
+    ).otherwise(None), 2)
+) 
+
+# Final column select
+dataset = dataset.select(
+"VendorID", "PUlocationID", "tpep_pickup_datetime", "tpep_dropoff_datetime",
+"DOlocationID", "trip_distance", "trip_time_minutes", "avg_speed", "passenger_count",
+"RatecodeID", "payment_type", "fare_amount", "extra", "mta_tax",
+"tip_amount", "tolls_amount", "improvement_surcharge", "congestion_surcharge",
+"airport_fee", "total_amount", "_ingestion_time", "_source_file"
+)
+
+# Data description
+dataset = map_ratecode_description(dataset)
+dataset = map_payment_type_description(dataset)
+dataset = map_vendor_id_description(dataset)
+dataset = map_location_to_zone(dataset, "PUlocationID", location_dict)
+dataset = map_location_to_zone(dataset, "DOlocationID", location_dict)
+dataset = dataset.fillna({"PUlocationID": "Unknown", "DOlocationID": "Unknown"})
+dataset.withColumn("month", month(col("tpep_pickup_datetime"))).select(col("month")).orderBy(col("month")).distinct().show()
+
+# dataset.display()
+# dataset.count()

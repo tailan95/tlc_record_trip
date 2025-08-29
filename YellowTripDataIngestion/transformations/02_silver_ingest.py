@@ -18,12 +18,12 @@ def tripdata_silver() -> DataFrame:
   dataset = dlt.read_stream("tripdata_raw")
   
   # Apply transformations
-  dataset = cast_columns(dataset)
   dataset = fill_missing_values(dataset)
+  dataset = cast_columns(dataset)
   dataset = add_trip_time(dataset)
-  dataset = drop_duplicate_trips(dataset)
   dataset = apply_consistency_filters(dataset, valid_ids)
   dataset = validate_financials(dataset, tolerance_pct=0.03)
+  dataset = drop_duplicate_trips(dataset)
   dataset = dataset.withColumn(
     "avg_speed", 
     spark_round(

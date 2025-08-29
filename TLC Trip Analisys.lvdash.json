@@ -23,6 +23,13 @@
         "SELECT *\r\n",
         "FROM tlc.tripdata.gold_passengers_metrics"
       ]
+    },
+    {
+      "name": "fb0efcef",
+      "displayName": "Untitled dataset",
+      "queryLines": [
+        "select * from tlc.tripdata.tripdata_raw"
+      ]
     }
   ],
   "pages": [
@@ -179,9 +186,9 @@
             }
           },
           "position": {
-            "x": 1,
+            "x": 2,
             "y": 4,
-            "width": 5,
+            "width": 4,
             "height": 1
           }
         },
@@ -625,6 +632,53 @@
             "y": 8,
             "width": 3,
             "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "86488595",
+            "queries": [
+              {
+                "name": "dashboards/01f084d87a5a15eebc0031740d084325/datasets/01f084d87a5a19fdae7b6466517f741a_pickup_month",
+                "query": {
+                  "datasetName": "a09e2a19",
+                  "fields": [
+                    {
+                      "name": "pickup_month",
+                      "expression": "`pickup_month`"
+                    },
+                    {
+                      "name": "pickup_month_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "pickup_month",
+                    "displayName": "pickup_month",
+                    "queryName": "dashboards/01f084d87a5a15eebc0031740d084325/datasets/01f084d87a5a19fdae7b6466517f741a_pickup_month"
+                  }
+                ]
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Month"
+              }
+            }
+          },
+          "position": {
+            "x": 1,
+            "y": 4,
+            "width": 1,
+            "height": 1
           }
         }
       ],
