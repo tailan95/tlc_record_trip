@@ -20,16 +20,16 @@ def tripdata_silver() -> DataFrame:
   # Apply transformations
   dataset = cast_columns(dataset)
   dataset = fill_missing_values(dataset)
-  dataset = apply_consistency_filters(dataset, valid_ids)
-  dataset = validate_financials(dataset, tolerance_pct=0.03)
   dataset = add_trip_time(dataset)
   dataset = drop_duplicate_trips(dataset)
+  dataset = apply_consistency_filters(dataset, valid_ids)
+  dataset = validate_financials(dataset, tolerance_pct=0.03)
   dataset = dataset.withColumn(
     "avg_speed", 
     spark_round(
       when(
         col("trip_time_minutes") != 0, 
-        col("avg_distance") / (col("trip_time_minutes")/60)
+        col("trip_distance") / (col("trip_time_minutes")/60)
         ).otherwise(None), 2)
     ) 
   

@@ -2,10 +2,26 @@
   "datasets": [
     {
       "name": "a09e2a19",
-      "displayName": "Daily Metrics",
+      "displayName": "NYC Data Overview",
       "queryLines": [
         "SELECT *\r\n",
-        "FROM tlc.tripdata.gold_daily_metrics"
+        "FROM tlc.tripdata.gold_aggregated_values"
+      ]
+    },
+    {
+      "name": "3fa3a4e4",
+      "displayName": "Gold Bucket Trip Metrics Overview",
+      "queryLines": [
+        "SELECT *\r\n",
+        "FROM tlc.tripdata.gold_bucket_metrics"
+      ]
+    },
+    {
+      "name": "5c420c1f",
+      "displayName": "Passenger Gold Trip Insights",
+      "queryLines": [
+        "SELECT *\r\n",
+        "FROM tlc.tripdata.gold_passengers_metrics"
       ]
     }
   ],
@@ -16,12 +32,800 @@
       "layout": [
         {
           "widget": {
-            "name": "4d8561f5",
+            "name": "55f9d546",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# Daily Yellow Taxi Trip Metrics\n",
+                "\n",
+                "Este dashboard apresenta métricas diárias das corridas de táxi amarelo (Yellow Taxi), agregadas por **local de embarque** (PUlocationID) e período de tempo.  \n",
+                "\n",
+                "O objetivo deste dashboard é permitir:  \n",
+                "- Monitorar tendências diárias de volume e receita.  \n",
+                "- Identificar locais com maior movimentação e receita.  \n",
+                "- Analisar o comportamento de gorjetas e tempo médio de viagem.  \n",
+                "- Fornecer insights para tomada de decisão e planejamento operacional."
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "4caf6631",
             "queries": [
               {
                 "name": "main_query",
                 "query": {
                   "datasetName": "a09e2a19",
+                  "fields": [
+                    {
+                      "name": "PUlocationID",
+                      "expression": "`PUlocationID`"
+                    },
+                    {
+                      "name": "min(total_trips)",
+                      "expression": "MIN(`total_trips`)"
+                    },
+                    {
+                      "name": "q1(total_trips)",
+                      "expression": "PERCENTILE(`total_trips`, 0.25)"
+                    },
+                    {
+                      "name": "median(total_trips)",
+                      "expression": "MEDIAN(`total_trips`)"
+                    },
+                    {
+                      "name": "q3(total_trips)",
+                      "expression": "PERCENTILE(`total_trips`, 0.75)"
+                    },
+                    {
+                      "name": "max(total_trips)",
+                      "expression": "MAX(`total_trips`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "box",
+              "encodings": {
+                "x": {
+                  "fieldName": "PUlocationID",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "PUlocationID"
+                },
+                "y": {
+                  "whiskerStart": {
+                    "fieldName": "min(total_trips)",
+                    "displayName": "Minimum total_trips"
+                  },
+                  "boxStart": {
+                    "fieldName": "q1(total_trips)",
+                    "displayName": "First Quartile of total_trips"
+                  },
+                  "boxMid": {
+                    "fieldName": "median(total_trips)",
+                    "displayName": "Median of total_trips"
+                  },
+                  "boxEnd": {
+                    "fieldName": "q3(total_trips)",
+                    "displayName": "Third Quartile of total_trips"
+                  },
+                  "whiskerEnd": {
+                    "fieldName": "max(total_trips)",
+                    "displayName": "Maximum total_trips"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 14,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "7c264d7f",
+            "queries": [
+              {
+                "name": "dashboards/01f084d87a5a15eebc0031740d084325/datasets/01f084d87a5a19fdae7b6466517f741a_PUlocationID",
+                "query": {
+                  "datasetName": "a09e2a19",
+                  "fields": [
+                    {
+                      "name": "PUlocationID",
+                      "expression": "`PUlocationID`"
+                    },
+                    {
+                      "name": "PUlocationID_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "PUlocationID",
+                    "displayName": "PUlocationID",
+                    "queryName": "dashboards/01f084d87a5a15eebc0031740d084325/datasets/01f084d87a5a19fdae7b6466517f741a_PUlocationID"
+                  }
+                ]
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Location"
+              }
+            }
+          },
+          "position": {
+            "x": 1,
+            "y": 4,
+            "width": 5,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "fce2db82",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "a09e2a19",
+                  "fields": [
+                    {
+                      "name": "PUlocationID",
+                      "expression": "`PUlocationID`"
+                    },
+                    {
+                      "name": "avg(avg_distance)",
+                      "expression": "AVG(`avg_distance`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "PUlocationID",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "PUlocationID"
+                },
+                "y": {
+                  "fieldName": "avg(avg_distance)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Average avg_distance"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Average Distance per Pickup Location"
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 14,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "87db2733",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "a09e2a19",
+                  "fields": [
+                    {
+                      "name": "pickup_day",
+                      "expression": "`pickup_day`"
+                    },
+                    {
+                      "name": "sum(total_revenue)",
+                      "expression": "SUM(`total_revenue`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "pickup_day",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  },
+                  "displayName": "pickup_day"
+                },
+                "y": {
+                  "fieldName": "sum(total_revenue)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Sum of total_revenue"
+                }
+              },
+              "frame": {
+                "title": "Total Revenue by Pickup Day",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 5,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "81a853aa",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "a09e2a19",
+                  "fields": [
+                    {
+                      "name": "pickup_month",
+                      "expression": "`pickup_month`"
+                    },
+                    {
+                      "name": "sum(total_trips)",
+                      "expression": "SUM(`total_trips`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "pickup_month",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  },
+                  "displayName": "pickup_month"
+                },
+                "y": {
+                  "fieldName": "sum(total_trips)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Sum of total_trips"
+                }
+              },
+              "frame": {
+                "title": "Total Trips per Month",
+                "showTitle": true
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "878a5050",
+            "queries": [
+              {
+                "name": "dashboards/01f084d87a5a15eebc0031740d084325/datasets/01f084d87a5a19fdae7b6466517f741a_pickup_year",
+                "query": {
+                  "datasetName": "a09e2a19",
+                  "fields": [
+                    {
+                      "name": "pickup_year",
+                      "expression": "`pickup_year`"
+                    },
+                    {
+                      "name": "pickup_year_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "pickup_year",
+                    "displayName": "pickup_year",
+                    "queryName": "dashboards/01f084d87a5a15eebc0031740d084325/datasets/01f084d87a5a19fdae7b6466517f741a_pickup_year"
+                  }
+                ]
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Year"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 4,
+            "width": 1,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "4e3e9356",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "a09e2a19",
+                  "fields": [
+                    {
+                      "name": "total_trips",
+                      "expression": "`total_trips`"
+                    },
+                    {
+                      "name": "total_revenue",
+                      "expression": "`total_revenue`"
+                    },
+                    {
+                      "name": "total_fare",
+                      "expression": "`total_fare`"
+                    },
+                    {
+                      "name": "total_tips",
+                      "expression": "`total_tips`"
+                    },
+                    {
+                      "name": "total_tolls",
+                      "expression": "`total_tolls`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "total_trips",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "total_trips"
+                },
+                "y": {
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "fields": [
+                    {
+                      "fieldName": "total_revenue",
+                      "displayName": "total_revenue"
+                    },
+                    {
+                      "fieldName": "total_fare",
+                      "displayName": "total_fare"
+                    },
+                    {
+                      "fieldName": "total_tips",
+                      "displayName": "total_tips"
+                    },
+                    {
+                      "fieldName": "total_tolls",
+                      "displayName": "total_tolls"
+                    }
+                  ]
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Total, Revenue, fare, tips and tolls by trips"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 8,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "a38327cb",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "a09e2a19",
+                  "fields": [
+                    {
+                      "name": "avg(tip_percentage)",
+                      "expression": "AVG(`tip_percentage`)"
+                    },
+                    {
+                      "name": "PUlocationID",
+                      "expression": "`PUlocationID`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "avg(tip_percentage)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Average tip_percentage"
+                },
+                "color": {
+                  "fieldName": "PUlocationID",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "PUlocationID"
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "frame": {
+                "title": "Average Tip Percentage by Pickup Location",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 8,
+            "width": 3,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS"
+    },
+    {
+      "name": "a41efaa7",
+      "displayName": "Bucket Metrics",
+      "layout": [
+        {
+          "widget": {
+            "name": "3f2213b9",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# Dashboard – Bucket Metrics (Gold Layer)\n",
+                "\n",
+                "Este dashboard apresenta métricas agregadas de viagens do Yellow Taxi, agrupadas por **categorias de distância** (`distance_bucket`) e **local de pickup** (`PUlocationID`).  \n",
+                "\n",
+                "As métricas exibidas incluem:\n",
+                "- **Total de viagens** (`total_trips`) por bucket de distância.\n",
+                "- **Receita total** (`total_revenue`) por bucket.\n",
+                "- **Tempo médio de viagem** (`avg_trip_time`) e **média de gorjetas** (`avg_tips`) por bucket.\n",
+                "- Possibilidade de filtrar por **local de pickup** e período (`day/week/month`).  \n",
+                "\n",
+                "O dashboard permite identificar padrões de viagens curtas, médias e longas, além de seu impacto em receita, tempo médio e gorjetas.  "
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "cdf39025",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "3fa3a4e4",
+                  "fields": [
+                    {
+                      "name": "distance_bucket",
+                      "expression": "`distance_bucket`"
+                    },
+                    {
+                      "name": "sum(total_trips)",
+                      "expression": "SUM(`total_trips`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "distance_bucket",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  },
+                  "displayName": "distance_bucket"
+                },
+                "y": {
+                  "fieldName": "sum(total_trips)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Sum of total_trips"
+                }
+              },
+              "frame": {
+                "title": "Total Trips by Distance Bucket",
+                "showTitle": true
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 9,
+            "width": 3,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "b1ffb569",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "3fa3a4e4",
+                  "fields": [
+                    {
+                      "name": "pickup_month",
+                      "expression": "`pickup_month`"
+                    },
+                    {
+                      "name": "sum(total_trips)",
+                      "expression": "SUM(`total_trips`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "pickup_month",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  },
+                  "displayName": "pickup_month"
+                },
+                "y": {
+                  "fieldName": "sum(total_trips)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Sum of total_trips"
+                }
+              },
+              "frame": {
+                "title": "Total Trips per Month",
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 3,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "2f5f4ab8",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "3fa3a4e4",
                   "fields": [
                     {
                       "name": "pickup_day",
@@ -45,16 +849,7 @@
                   "scale": {
                     "type": "categorical",
                     "sort": {
-                      "by": "custom-order",
-                      "orderedValues": [
-                        "Monday",
-                        "Tuesday",
-                        "Wednesday",
-                        "Thursday",
-                        "Friday",
-                        "Saturday",
-                        "Sunday"
-                      ]
+                      "by": "y-reversed"
                     }
                   },
                   "displayName": "pickup_day"
@@ -65,14 +860,11 @@
                     "type": "quantitative"
                   },
                   "displayName": "Sum of total_trips"
-                },
-                "label": {
-                  "show": true
                 }
               },
               "frame": {
-                "showTitle": true,
-                "title": "Total trips"
+                "title": "Total Trips per Day",
+                "showTitle": true
               },
               "mark": {
                 "colors": [
@@ -121,27 +913,27 @@
             }
           },
           "position": {
-            "x": 2,
-            "y": 0,
-            "width": 2,
-            "height": 6
+            "x": 3,
+            "y": 6,
+            "width": 3,
+            "height": 3
           }
         },
         {
           "widget": {
-            "name": "db39b3fe",
+            "name": "6a51e44b",
             "queries": [
               {
-                "name": "dashboards/01f0844a419d1c34bbc07923ea3587c8/datasets/01f0847c6c9510e5b7e3ffb37a184133_pickup_month",
+                "name": "dashboards/01f084d87a5a15eebc0031740d084325/datasets/01f084d8aa441bffbdc3152629d42ee5_pickup_year",
                 "query": {
-                  "datasetName": "a09e2a19",
+                  "datasetName": "3fa3a4e4",
                   "fields": [
                     {
-                      "name": "pickup_month",
-                      "expression": "`pickup_month`"
+                      "name": "pickup_year",
+                      "expression": "`pickup_year`"
                     },
                     {
-                      "name": "pickup_month_associativity",
+                      "name": "pickup_year_associativity",
                       "expression": "COUNT_IF(`associative_filter_predicate_group`)"
                     }
                   ],
@@ -151,551 +943,37 @@
             ],
             "spec": {
               "version": 2,
-              "widgetType": "filter-multi-select",
+              "widgetType": "filter-single-select",
               "encodings": {
                 "fields": [
                   {
-                    "fieldName": "pickup_month",
-                    "displayName": "pickup_month",
-                    "queryName": "dashboards/01f0844a419d1c34bbc07923ea3587c8/datasets/01f0847c6c9510e5b7e3ffb37a184133_pickup_month"
+                    "fieldName": "pickup_year",
+                    "displayName": "pickup_year",
+                    "queryName": "dashboards/01f084d87a5a15eebc0031740d084325/datasets/01f084d8aa441bffbdc3152629d42ee5_pickup_year"
                   }
                 ]
               },
               "frame": {
                 "showTitle": true,
-                "title": "Month"
+                "title": "Year"
               }
             }
           },
           "position": {
             "x": 0,
-            "y": 1,
-            "width": 2,
+            "y": 5,
+            "width": 1,
             "height": 1
           }
         },
         {
           "widget": {
-            "name": "0c89da43",
+            "name": "987ea981",
             "queries": [
               {
-                "name": "main_query",
+                "name": "dashboards/01f084d87a5a15eebc0031740d084325/datasets/01f084d8aa441bffbdc3152629d42ee5_PUlocationID",
                 "query": {
-                  "datasetName": "a09e2a19",
-                  "fields": [
-                    {
-                      "name": "PUlocationID",
-                      "expression": "`PUlocationID`"
-                    },
-                    {
-                      "name": "pickup_month",
-                      "expression": "`pickup_month`"
-                    },
-                    {
-                      "name": "total_trips",
-                      "expression": "`total_trips`"
-                    },
-                    {
-                      "name": "total_revenue",
-                      "expression": "`total_revenue`"
-                    }
-                  ],
-                  "disaggregated": true
-                }
-              }
-            ],
-            "spec": {
-              "version": 1,
-              "widgetType": "table",
-              "encodings": {
-                "columns": [
-                  {
-                    "fieldName": "PUlocationID",
-                    "booleanValues": [
-                      "false",
-                      "true"
-                    ],
-                    "imageUrlTemplate": "{{ @ }}",
-                    "imageTitleTemplate": "{{ @ }}",
-                    "imageWidth": "",
-                    "imageHeight": "",
-                    "linkUrlTemplate": "{{ @ }}",
-                    "linkTextTemplate": "{{ @ }}",
-                    "linkTitleTemplate": "{{ @ }}",
-                    "linkOpenInNewTab": true,
-                    "type": "string",
-                    "displayAs": "string",
-                    "visible": true,
-                    "order": 100000,
-                    "title": "PUlocationID",
-                    "allowSearch": false,
-                    "alignContent": "left",
-                    "allowHTML": false,
-                    "highlightLinks": false,
-                    "useMonospaceFont": false,
-                    "preserveWhitespace": false,
-                    "displayName": "PUlocationID"
-                  },
-                  {
-                    "fieldName": "pickup_month",
-                    "booleanValues": [
-                      "false",
-                      "true"
-                    ],
-                    "imageUrlTemplate": "{{ @ }}",
-                    "imageTitleTemplate": "{{ @ }}",
-                    "imageWidth": "",
-                    "imageHeight": "",
-                    "linkUrlTemplate": "{{ @ }}",
-                    "linkTextTemplate": "{{ @ }}",
-                    "linkTitleTemplate": "{{ @ }}",
-                    "linkOpenInNewTab": true,
-                    "type": "string",
-                    "displayAs": "string",
-                    "visible": true,
-                    "order": 100002,
-                    "title": "pickup_month",
-                    "allowSearch": false,
-                    "alignContent": "left",
-                    "allowHTML": false,
-                    "highlightLinks": false,
-                    "useMonospaceFont": false,
-                    "preserveWhitespace": false,
-                    "displayName": "pickup_month"
-                  },
-                  {
-                    "fieldName": "total_trips",
-                    "numberFormat": "0",
-                    "booleanValues": [
-                      "false",
-                      "true"
-                    ],
-                    "imageUrlTemplate": "{{ @ }}",
-                    "imageTitleTemplate": "{{ @ }}",
-                    "imageWidth": "",
-                    "imageHeight": "",
-                    "linkUrlTemplate": "{{ @ }}",
-                    "linkTextTemplate": "{{ @ }}",
-                    "linkTitleTemplate": "{{ @ }}",
-                    "linkOpenInNewTab": true,
-                    "type": "integer",
-                    "displayAs": "number",
-                    "visible": true,
-                    "order": 100004,
-                    "title": "total_trips",
-                    "allowSearch": false,
-                    "alignContent": "right",
-                    "allowHTML": false,
-                    "highlightLinks": false,
-                    "useMonospaceFont": false,
-                    "preserveWhitespace": false,
-                    "displayName": "total_trips"
-                  },
-                  {
-                    "fieldName": "total_revenue",
-                    "numberFormat": "0.00",
-                    "booleanValues": [
-                      "false",
-                      "true"
-                    ],
-                    "imageUrlTemplate": "{{ @ }}",
-                    "imageTitleTemplate": "{{ @ }}",
-                    "imageWidth": "",
-                    "imageHeight": "",
-                    "linkUrlTemplate": "{{ @ }}",
-                    "linkTextTemplate": "{{ @ }}",
-                    "linkTitleTemplate": "{{ @ }}",
-                    "linkOpenInNewTab": true,
-                    "type": "float",
-                    "displayAs": "number",
-                    "visible": true,
-                    "order": 100005,
-                    "title": "total_revenue",
-                    "allowSearch": false,
-                    "alignContent": "right",
-                    "allowHTML": false,
-                    "highlightLinks": false,
-                    "useMonospaceFont": false,
-                    "preserveWhitespace": false,
-                    "displayName": "total_revenue"
-                  }
-                ]
-              },
-              "invisibleColumns": [
-                {
-                  "numberFormat": "0",
-                  "booleanValues": [
-                    "false",
-                    "true"
-                  ],
-                  "imageUrlTemplate": "{{ @ }}",
-                  "imageTitleTemplate": "{{ @ }}",
-                  "imageWidth": "",
-                  "imageHeight": "",
-                  "linkUrlTemplate": "{{ @ }}",
-                  "linkTextTemplate": "{{ @ }}",
-                  "linkTitleTemplate": "{{ @ }}",
-                  "linkOpenInNewTab": true,
-                  "name": "pickup_year",
-                  "type": "integer",
-                  "displayAs": "number",
-                  "order": 100001,
-                  "title": "pickup_year",
-                  "allowSearch": false,
-                  "alignContent": "right",
-                  "allowHTML": false,
-                  "highlightLinks": false,
-                  "useMonospaceFont": false,
-                  "preserveWhitespace": false
-                },
-                {
-                  "numberFormat": "0.00",
-                  "booleanValues": [
-                    "false",
-                    "true"
-                  ],
-                  "imageUrlTemplate": "{{ @ }}",
-                  "imageTitleTemplate": "{{ @ }}",
-                  "imageWidth": "",
-                  "imageHeight": "",
-                  "linkUrlTemplate": "{{ @ }}",
-                  "linkTextTemplate": "{{ @ }}",
-                  "linkTitleTemplate": "{{ @ }}",
-                  "linkOpenInNewTab": true,
-                  "name": "total_fare",
-                  "type": "float",
-                  "displayAs": "number",
-                  "order": 100006,
-                  "title": "total_fare",
-                  "allowSearch": false,
-                  "alignContent": "right",
-                  "allowHTML": false,
-                  "highlightLinks": false,
-                  "useMonospaceFont": false,
-                  "preserveWhitespace": false
-                },
-                {
-                  "numberFormat": "0.00",
-                  "booleanValues": [
-                    "false",
-                    "true"
-                  ],
-                  "imageUrlTemplate": "{{ @ }}",
-                  "imageTitleTemplate": "{{ @ }}",
-                  "imageWidth": "",
-                  "imageHeight": "",
-                  "linkUrlTemplate": "{{ @ }}",
-                  "linkTextTemplate": "{{ @ }}",
-                  "linkTitleTemplate": "{{ @ }}",
-                  "linkOpenInNewTab": true,
-                  "name": "total_tips",
-                  "type": "float",
-                  "displayAs": "number",
-                  "order": 100007,
-                  "title": "total_tips",
-                  "allowSearch": false,
-                  "alignContent": "right",
-                  "allowHTML": false,
-                  "highlightLinks": false,
-                  "useMonospaceFont": false,
-                  "preserveWhitespace": false
-                },
-                {
-                  "numberFormat": "0.00",
-                  "booleanValues": [
-                    "false",
-                    "true"
-                  ],
-                  "imageUrlTemplate": "{{ @ }}",
-                  "imageTitleTemplate": "{{ @ }}",
-                  "imageWidth": "",
-                  "imageHeight": "",
-                  "linkUrlTemplate": "{{ @ }}",
-                  "linkTextTemplate": "{{ @ }}",
-                  "linkTitleTemplate": "{{ @ }}",
-                  "linkOpenInNewTab": true,
-                  "name": "total_tolls",
-                  "type": "float",
-                  "displayAs": "number",
-                  "order": 100008,
-                  "title": "total_tolls",
-                  "allowSearch": false,
-                  "alignContent": "right",
-                  "allowHTML": false,
-                  "highlightLinks": false,
-                  "useMonospaceFont": false,
-                  "preserveWhitespace": false
-                },
-                {
-                  "numberFormat": "0.00",
-                  "booleanValues": [
-                    "false",
-                    "true"
-                  ],
-                  "imageUrlTemplate": "{{ @ }}",
-                  "imageTitleTemplate": "{{ @ }}",
-                  "imageWidth": "",
-                  "imageHeight": "",
-                  "linkUrlTemplate": "{{ @ }}",
-                  "linkTextTemplate": "{{ @ }}",
-                  "linkTitleTemplate": "{{ @ }}",
-                  "linkOpenInNewTab": true,
-                  "name": "avg_distance",
-                  "type": "float",
-                  "displayAs": "number",
-                  "order": 100009,
-                  "title": "avg_distance",
-                  "allowSearch": false,
-                  "alignContent": "right",
-                  "allowHTML": false,
-                  "highlightLinks": false,
-                  "useMonospaceFont": false,
-                  "preserveWhitespace": false
-                },
-                {
-                  "numberFormat": "0.00",
-                  "booleanValues": [
-                    "false",
-                    "true"
-                  ],
-                  "imageUrlTemplate": "{{ @ }}",
-                  "imageTitleTemplate": "{{ @ }}",
-                  "imageWidth": "",
-                  "imageHeight": "",
-                  "linkUrlTemplate": "{{ @ }}",
-                  "linkTextTemplate": "{{ @ }}",
-                  "linkTitleTemplate": "{{ @ }}",
-                  "linkOpenInNewTab": true,
-                  "name": "avg_trip_time",
-                  "type": "float",
-                  "displayAs": "number",
-                  "order": 100010,
-                  "title": "avg_trip_time",
-                  "allowSearch": false,
-                  "alignContent": "right",
-                  "allowHTML": false,
-                  "highlightLinks": false,
-                  "useMonospaceFont": false,
-                  "preserveWhitespace": false
-                },
-                {
-                  "numberFormat": "0.00",
-                  "booleanValues": [
-                    "false",
-                    "true"
-                  ],
-                  "imageUrlTemplate": "{{ @ }}",
-                  "imageTitleTemplate": "{{ @ }}",
-                  "imageWidth": "",
-                  "imageHeight": "",
-                  "linkUrlTemplate": "{{ @ }}",
-                  "linkTextTemplate": "{{ @ }}",
-                  "linkTitleTemplate": "{{ @ }}",
-                  "linkOpenInNewTab": true,
-                  "name": "tip_percentage",
-                  "type": "float",
-                  "displayAs": "number",
-                  "order": 100011,
-                  "title": "tip_percentage",
-                  "allowSearch": false,
-                  "alignContent": "right",
-                  "allowHTML": false,
-                  "highlightLinks": false,
-                  "useMonospaceFont": false,
-                  "preserveWhitespace": false
-                },
-                {
-                  "numberFormat": "0",
-                  "booleanValues": [
-                    "false",
-                    "true"
-                  ],
-                  "imageUrlTemplate": "{{ @ }}",
-                  "imageTitleTemplate": "{{ @ }}",
-                  "imageWidth": "",
-                  "imageHeight": "",
-                  "linkUrlTemplate": "{{ @ }}",
-                  "linkTextTemplate": "{{ @ }}",
-                  "linkTitleTemplate": "{{ @ }}",
-                  "linkOpenInNewTab": true,
-                  "name": "pickup_week",
-                  "type": "integer",
-                  "displayAs": "number",
-                  "order": 100003,
-                  "title": "pickup_week",
-                  "allowSearch": false,
-                  "alignContent": "right",
-                  "allowHTML": false,
-                  "highlightLinks": false,
-                  "useMonospaceFont": false,
-                  "preserveWhitespace": false
-                }
-              ],
-              "allowHTMLByDefault": false,
-              "itemsPerPage": 25,
-              "paginationSize": "default",
-              "condensed": true,
-              "withRowNumber": false
-            }
-          },
-          "position": {
-            "x": 0,
-            "y": 2,
-            "width": 2,
-            "height": 10
-          }
-        },
-        {
-          "widget": {
-            "name": "ce4f43d2",
-            "queries": [
-              {
-                "name": "main_query",
-                "query": {
-                  "datasetName": "a09e2a19",
-                  "fields": [
-                    {
-                      "name": "pickup_day",
-                      "expression": "`pickup_day`"
-                    },
-                    {
-                      "name": "sum(total_revenue)",
-                      "expression": "SUM(`total_revenue`)"
-                    },
-                    {
-                      "name": "sum(total_fare)",
-                      "expression": "SUM(`total_fare`)"
-                    },
-                    {
-                      "name": "sum(total_tips)",
-                      "expression": "SUM(`total_tips`)"
-                    },
-                    {
-                      "name": "sum(total_tolls)",
-                      "expression": "SUM(`total_tolls`)"
-                    }
-                  ],
-                  "disaggregated": false
-                }
-              }
-            ],
-            "spec": {
-              "version": 1,
-              "widgetType": "combo",
-              "encodings": {
-                "x": {
-                  "fieldName": "pickup_day",
-                  "scale": {
-                    "type": "categorical",
-                    "sort": {
-                      "by": "custom-order",
-                      "orderedValues": [
-                        "Monday",
-                        "Tuesday",
-                        "Wednesday",
-                        "Thursday",
-                        "Friday",
-                        "Saturday",
-                        "Sunday"
-                      ]
-                    }
-                  },
-                  "displayName": "pickup_day"
-                },
-                "y": {
-                  "primary": {
-                    "fields": [
-                      {
-                        "fieldName": "sum(total_revenue)",
-                        "displayName": "Sum of total_revenue"
-                      }
-                    ]
-                  },
-                  "secondary": {
-                    "fields": [
-                      {
-                        "fieldName": "sum(total_fare)",
-                        "displayName": "Sum of total_fare"
-                      },
-                      {
-                        "fieldName": "sum(total_tips)",
-                        "displayName": "Sum of total_tips"
-                      },
-                      {
-                        "fieldName": "sum(total_tolls)",
-                        "displayName": "Sum of total_tolls"
-                      }
-                    ]
-                  },
-                  "scale": {
-                    "type": "quantitative"
-                  }
-                },
-                "label": {
-                  "show": false
-                }
-              },
-              "frame": {
-                "showTitle": true,
-                "title": "Total revenue (USD$)"
-              },
-              "mark": {
-                "colors": [
-                  {
-                    "themeColorType": "visualizationColors",
-                    "position": 3
-                  },
-                  {
-                    "themeColorType": "visualizationColors",
-                    "position": 4
-                  },
-                  {
-                    "themeColorType": "visualizationColors",
-                    "position": 2
-                  },
-                  {
-                    "themeColorType": "visualizationColors",
-                    "position": 10
-                  },
-                  {
-                    "themeColorType": "visualizationColors",
-                    "position": 5
-                  },
-                  {
-                    "themeColorType": "visualizationColors",
-                    "position": 6
-                  },
-                  {
-                    "themeColorType": "visualizationColors",
-                    "position": 7
-                  },
-                  {
-                    "themeColorType": "visualizationColors",
-                    "position": 9
-                  },
-                  {
-                    "themeColorType": "visualizationColors",
-                    "position": 10
-                  }
-                ]
-              }
-            }
-          },
-          "position": {
-            "x": 2,
-            "y": 6,
-            "width": 2,
-            "height": 6
-          }
-        },
-        {
-          "widget": {
-            "name": "8fff62c0",
-            "queries": [
-              {
-                "name": "dashboards/01f0844a419d1c34bbc07923ea3587c8/datasets/01f0847c6c9510e5b7e3ffb37a184133_PUlocationID",
-                "query": {
-                  "datasetName": "a09e2a19",
+                  "datasetName": "3fa3a4e4",
                   "fields": [
                     {
                       "name": "PUlocationID",
@@ -712,32 +990,230 @@
             ],
             "spec": {
               "version": 2,
-              "widgetType": "filter-multi-select",
+              "widgetType": "filter-single-select",
               "encodings": {
                 "fields": [
                   {
                     "fieldName": "PUlocationID",
                     "displayName": "PUlocationID",
-                    "queryName": "dashboards/01f0844a419d1c34bbc07923ea3587c8/datasets/01f0847c6c9510e5b7e3ffb37a184133_PUlocationID"
+                    "queryName": "dashboards/01f084d87a5a15eebc0031740d084325/datasets/01f084d8aa441bffbdc3152629d42ee5_PUlocationID"
                   }
                 ]
               },
               "frame": {
-                "showTitle": true,
-                "title": "Pickup Location"
+                "showTitle": true
               }
             }
           },
           "position": {
-            "x": 0,
-            "y": 0,
-            "width": 2,
+            "x": 1,
+            "y": 5,
+            "width": 5,
             "height": 1
           }
         },
         {
           "widget": {
-            "name": "9876ac18",
+            "name": "7a4925a9",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "3fa3a4e4",
+                  "fields": [
+                    {
+                      "name": "total_trips",
+                      "expression": "`total_trips`"
+                    },
+                    {
+                      "name": "total_revenue",
+                      "expression": "`total_revenue`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "area",
+              "encodings": {
+                "x": {
+                  "fieldName": "total_trips",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "total_trips"
+                },
+                "y": {
+                  "fieldName": "total_revenue",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "total_revenue"
+                }
+              },
+              "frame": {
+                "title": "Total Revenue vs Total Trips",
+                "showTitle": true
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 13,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "8a0fdd21",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "3fa3a4e4",
+                  "fields": [
+                    {
+                      "name": "distance_bucket",
+                      "expression": "`distance_bucket`"
+                    },
+                    {
+                      "name": "avg(avg_tips)",
+                      "expression": "AVG(`avg_tips`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "distance_bucket",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  },
+                  "displayName": "distance_bucket"
+                },
+                "y": {
+                  "fieldName": "avg(avg_tips)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Average avg_tips"
+                }
+              },
+              "frame": {
+                "title": "Average Tips by Distance Bucket",
+                "showTitle": true
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 13,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "5be73345",
             "queries": [
               {
                 "name": "main_query",
@@ -749,24 +1225,8 @@
                       "expression": "`pickup_day`"
                     },
                     {
-                      "name": "min(avg_distance)",
-                      "expression": "MIN(`avg_distance`)"
-                    },
-                    {
-                      "name": "q1(avg_distance)",
-                      "expression": "PERCENTILE(`avg_distance`, 0.25)"
-                    },
-                    {
-                      "name": "median(avg_distance)",
-                      "expression": "MEDIAN(`avg_distance`)"
-                    },
-                    {
-                      "name": "q3(avg_distance)",
-                      "expression": "PERCENTILE(`avg_distance`, 0.75)"
-                    },
-                    {
-                      "name": "max(avg_distance)",
-                      "expression": "MAX(`avg_distance`)"
+                      "name": "avg(avg_trip_time)",
+                      "expression": "AVG(`avg_trip_time`)"
                     }
                   ],
                   "disaggregated": false
@@ -775,73 +1235,81 @@
             ],
             "spec": {
               "version": 3,
-              "widgetType": "box",
+              "widgetType": "bar",
               "encodings": {
                 "x": {
                   "fieldName": "pickup_day",
                   "scale": {
-                    "type": "categorical"
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
                   },
                   "displayName": "pickup_day"
                 },
                 "y": {
-                  "whiskerStart": {
-                    "fieldName": "min(avg_distance)",
-                    "displayName": "Minimum avg_distance"
-                  },
-                  "boxStart": {
-                    "fieldName": "q1(avg_distance)",
-                    "displayName": "First Quartile of avg_distance"
-                  },
-                  "boxMid": {
-                    "fieldName": "median(avg_distance)",
-                    "displayName": "Median of avg_distance"
-                  },
-                  "boxEnd": {
-                    "fieldName": "q3(avg_distance)",
-                    "displayName": "Third Quartile of avg_distance"
-                  },
-                  "whiskerEnd": {
-                    "fieldName": "max(avg_distance)",
-                    "displayName": "Maximum avg_distance"
-                  },
+                  "fieldName": "avg(avg_trip_time)",
                   "scale": {
                     "type": "quantitative"
+                  },
+                  "displayName": "Average avg_trip_time"
+                }
+              },
+              "frame": {
+                "title": "Average Trip Time by Pickup Day",
+                "showTitle": true
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
                   }
-                }
+                ]
               }
             }
           },
           "position": {
-            "x": 4,
-            "y": 0,
-            "width": 2,
-            "height": 6
-          }
-        },
-        {
-          "widget": {
-            "name": "03a31f48",
-            "queries": [
-              {
-                "name": "main_query",
-                "query": {
-                  "datasetName": "a09e2a19",
-                  "disaggregated": true
-                }
-              }
-            ],
-            "spec": {
-              "version": 3,
-              "widgetType": "bar",
-              "encodings": {}
-            }
-          },
-          "position": {
-            "x": 4,
-            "y": 6,
-            "width": 2,
-            "height": 6
+            "x": 3,
+            "y": 9,
+            "width": 3,
+            "height": 4
           }
         }
       ],

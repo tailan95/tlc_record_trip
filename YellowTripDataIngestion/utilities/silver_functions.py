@@ -55,7 +55,15 @@ def apply_consistency_filters(df: DataFrame, valid_ids: List[int]) -> DataFrame:
         .filter(col("RatecodeID").isin([1, 2, 3, 4, 5, 6, 99]))\
         .filter(col("payment_type").isin([0, 1, 2, 3, 4, 5, 6]))\
         .filter(col("VendorID").isin([1, 2, 6, 7]))\
-        .filter((col("PUlocationID").isin(valid_ids)) & (col("DOlocationID").isin(valid_ids)))
+        .filter((col("PUlocationID").isin(valid_ids)) & (col("DOlocationID").isin(valid_ids)))\
+        .filter(
+            (col("trip_distance") > 0) & (col("trip_distance") <= 150) &
+            (col("trip_time_minutes") > 3) & (col("trip_time_minutes") <= 180) &
+            (col("total_amount") > 0) & (col("total_amount") <= 500) &
+            (col("fare_amount") >= 0) &
+            (col("tip_amount") >= 0) &
+            (col("tolls_amount") >= 0)
+        )
 
 def validate_financials(df: DataFrame, tolerance_pct: Optional[float] = 0.03) -> DataFrame:
     df = df.withColumn(

@@ -14,7 +14,7 @@
 
 # COMMAND ----------
 
-from pyspark.sql.functions import col, to_date, lit
+from pyspark.sql.functions import col, to_date, lit, month, to_date
 raw_data = spark.sql("SELECT * FROM tlc.tripdata.tripdata_raw")
 columns = [
       "VendorID", 
@@ -36,6 +36,7 @@ columns = [
       "congestion_surcharge", 
       "airport_fee", 
 ]
+raw_data = raw_data.filter(col("tpep_pickup_datetime") < to_date(lit("2023-02-01")))
 raw_data = raw_data.select(*columns)
 raw_data.limit(20).display()
 
