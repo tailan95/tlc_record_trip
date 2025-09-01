@@ -15,7 +15,7 @@ location_dict = dict(zip(taxi_zones['LocationID'], taxi_zones['zone']))
 def tripdata_silver() -> DataFrame:
 
   # Read raw data
-  dataset = dlt.read_stream("tripdata_raw")
+  dataset = dlt.read("tripdata_raw")
   
   # Apply transformations
   dataset = fill_missing_values(dataset)

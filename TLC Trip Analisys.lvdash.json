@@ -26,7 +26,7 @@
     },
     {
       "name": "fb0efcef",
-      "displayName": "Untitled dataset",
+      "displayName": "Complete Taxi Trip Records Summary",
       "queryLines": [
         "select * from tlc.tripdata.tripdata_raw"
       ]
@@ -321,7 +321,16 @@
                   "scale": {
                     "type": "categorical",
                     "sort": {
-                      "by": "y-reversed"
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Sunday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday",
+                        "Monday"
+                      ]
                     }
                   },
                   "displayName": "pickup_day"
@@ -378,7 +387,13 @@
                   "scale": {
                     "type": "categorical",
                     "sort": {
-                      "by": "y-reversed"
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Jan",
+                        "Feb",
+                        "Mar",
+                        "Apr"
+                      ]
                     }
                   },
                   "displayName": "pickup_month"
@@ -745,7 +760,16 @@
                   "scale": {
                     "type": "categorical",
                     "sort": {
-                      "by": "y-reversed"
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "0-2 miles",
+                        "2-5 miles",
+                        "5-10 miles",
+                        "10-25 miles",
+                        "25-50 miles",
+                        "50-100 miles",
+                        ">100 miles"
+                      ]
                     }
                   },
                   "displayName": "distance_bucket"
@@ -846,7 +870,13 @@
                   "scale": {
                     "type": "categorical",
                     "sort": {
-                      "by": "y-reversed"
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Jan",
+                        "Feb",
+                        "Mar",
+                        "Apr"
+                      ]
                     }
                   },
                   "displayName": "pickup_month"
@@ -903,7 +933,16 @@
                   "scale": {
                     "type": "categorical",
                     "sort": {
-                      "by": "y-reversed"
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday",
+                        "Sunday"
+                      ]
                     }
                   },
                   "displayName": "pickup_day"
@@ -1060,9 +1099,9 @@
             }
           },
           "position": {
-            "x": 1,
+            "x": 2,
             "y": 5,
-            "width": 5,
+            "width": 4,
             "height": 1
           }
         },
@@ -1195,7 +1234,16 @@
                   "scale": {
                     "type": "categorical",
                     "sort": {
-                      "by": "y-reversed"
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "0-2 miles",
+                        "2-5 miles",
+                        "5-10 miles",
+                        "10-25 miles",
+                        "25-50 miles",
+                        "50-100 miles",
+                        ">100 miles"
+                      ]
                     }
                   },
                   "displayName": "distance_bucket"
@@ -1296,7 +1344,16 @@
                   "scale": {
                     "type": "categorical",
                     "sort": {
-                      "by": "y-reversed"
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday",
+                        "Sunday"
+                      ]
                     }
                   },
                   "displayName": "pickup_day"
@@ -1364,6 +1421,53 @@
             "y": 9,
             "width": 3,
             "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "e935471a",
+            "queries": [
+              {
+                "name": "dashboards/01f084d87a5a15eebc0031740d084325/datasets/01f084d87a5a19fdae7b6466517f741a_pickup_month",
+                "query": {
+                  "datasetName": "a09e2a19",
+                  "fields": [
+                    {
+                      "name": "pickup_month",
+                      "expression": "`pickup_month`"
+                    },
+                    {
+                      "name": "pickup_month_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "pickup_month",
+                    "displayName": "pickup_month",
+                    "queryName": "dashboards/01f084d87a5a15eebc0031740d084325/datasets/01f084d87a5a19fdae7b6466517f741a_pickup_month"
+                  }
+                ]
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Month"
+              }
+            }
+          },
+          "position": {
+            "x": 1,
+            "y": 5,
+            "width": 1,
+            "height": 1
           }
         }
       ],
